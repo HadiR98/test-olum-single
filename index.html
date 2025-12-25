@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>علوم هشتم - فصل ۴: تنظیم عصبی</title>
+    <!-- فراخوانی فونت وزیرمتن برای زیبایی تایپوگرافی -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    
+    <style>
+        /* * تنظیمات کلی و متغیرهای رنگی (CSS Variables)
+         * برای ایجاد تم رنگی علمی و جذاب
+         */
+        :root {
+            --primary-color: #4f46e5; /* نیلی - برای هدر و دکمه‌های اصلی */
+            --secondary-color: #10b981; /* سبز - برای موفقیت و نکات مثبت */
+            --accent-color: #f59e0b; /* نارنجی - برای هشدارها و نکات مهم */
+            --bg-color: #f3f4f6; /* خاکستری روشن - پس‌زمینه */
+            --card-bg: #ffffff; /* سفید - پس‌زمینه کارت‌ها */
+            --text-main: #1f2937; /* خاکستری تیره - متن اصلی */
+            --text-light: #6b7280; /* خاکستری روشن - متن فرعی */
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px; /* فضا برای نوار پایین موبایل */
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #4338ca);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* نوار پیشرفت مطالعه */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(255,255,255,0.3);
+            z-index: 1000;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* --- Main Container --- */
+        .container {
+            max-width: 800px;
+            margin: -30px auto 0;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- Tabs Navigation --- */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--card-bg);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-light);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        /* --- Content Sections --- */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Lesson Cards (Darsnameh) --- */
+        .lesson-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            border-right: 5px solid var(--primary-color);
+        }
+
+        .lesson-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lesson-card ul {
+            list-style-type: none;
+            padding-right: 0;
+        }
+
+        .lesson-card li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-right: 20px;
+        }
+
+        .lesson-card li::before {
+            content: "•";
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.5em;
+            position: absolute;
+            right: 0;
+            top: -5px;
+        }
+
+        .highlight {
+            background-color: #fef3c7;
+            padding: 2px 5px;
+            border-radius: 4px;
+            color: #d97706;
+            font-weight: bold;
+            cursor: help;
+            border-bottom: 1px dashed #d97706;
+        }
+
+        /* --- Interactive Neuron Section --- */
+        .neuron-interactive {
+            background: #2d3748;
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .neuron-parts {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .part-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .part-btn:hover, .part-btn.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        .neuron-info {
+            margin-top: 15px;
+            min-height: 50px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* --- Flashcards --- */
+        .flashcards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .flashcard-container {
+            perspective: 1000px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            border-radius: var(--radius);
+        }
+
+        .card-front {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .card-back {
+            background: var(--primary-color);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .card-hint {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            opacity: 0.7;
+        }
+
+        /* --- Quiz Section --- */
+        .quiz-container {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option-btn {
+            padding: 15px;
+            background: #f3f4f6;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+            text-align: right;
+            position: relative;
+        }
+
+        .option-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .option-btn.correct {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        .feedback-msg {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .next-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: none; /* مخفی تا زمان پاسخ */
+        }
+
+        .score-board {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* --- Footer/Did You Know --- */
+        .did-you-know {
+            margin-top: 30px;
+            background: linear-gradient(to right, #8b5cf6, #ec4899);
+            color: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            text-align: center;
+            position: relative;
+        }
+        
+        .bulb-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.5rem; }
+            .tabs { gap: 5px; }
+            .tab-btn { padding: 8px 12px; font-size: 0.9rem; }
+            .neuron-parts { flex-direction: column; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- نوار پیشرفت -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <header>
+        <h1>فصل ۴: تنظیم عصبی</h1>
+        <p>سفری شگفت‌انگیز به فرماندهی بدن انسان</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- منوی تب‌ها -->
+        <nav class="tabs">
+            <button class="tab-btn active" onclick="switchTab('lesson')">📘 درسنامه</button>
+            <button class="tab-btn" onclick="switchTab('flashcards')">🧠 فلش‌کارت</button>
+            <button class="tab-btn" onclick="switchTab('quiz')">📝 آزمون</button>
+            <button class="tab-btn" onclick="switchTab('extras')">🎨 آزمایشگاه</button>
+        </nav>
+
+        <!-- بخش ۱: درسنامه -->
+        <section id="lesson" class="content-section active">
+            
+            <div class="lesson-card">
+                <h3>🦠 دستگاه عصبی چیست؟</h3>
+                <p>دستگاه عصبی مثل <b>مدیریت کل بدن</b> عمل می‌کند. دو کار اصلی دارد:</p>
+                <ul>
+                    <li>دریافت اطلاعات از محیط بیرون و درون بدن.</li>
+                    <li>پردازش اطلاعات و صدور دستور مناسب.</li>
+                </ul>
+                <p style="margin-top:10px; font-size: 0.9rem; background:#eff6ff; padding:10px; border-radius:8px;">
+                    💡 <b>نکته مهم:</b> پاسخ‌های دستگاه عصبی برای حفظ سلامت و تنظیم فعالیت‌های بدن حیاتی هستند.
+                </p>
+            </div>
+
+            <div class="lesson-card">
+                <h3>🧠 بخش‌های دستگاه عصبی</h3>
+                <p>دستگاه عصبی شامل دو بخش اصلی است:</p>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+                    <div style="background:#f3f4f6; padding:10px; border-radius:8px; text-align:center;">
+                        <b style="color:var(--primary-color)">۱. مرکزی (CNS)</b>
+                        <br><span style="font-size:0.85rem">مغز و نخاع</span>
+                        <br><span style="font-size:0.8rem; color:#666">مرکز کنترل</span>
+                    </div>
+                    <div style="background:#f3f4f6; padding:10px; border-radius:8px; text-align:center;">
+                        <b style="color:var(--primary-color)">۲. محیطی (PNS)</b>
+                        <br><span style="font-size:0.85rem">اعصاب</span>
+                        <br><span style="font-size:0.8rem; color:#666">رابط بین اندام و مرکز</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lesson-card">
+                <h3>🏰 مراکز فرماندهی (مغز)</h3>
+                <ul>
+                    <li><span class="highlight" title="بزرگترین بخش مغز">مخ:</span> مسئول اعمال ارادی، تفکر، حافظه، احساسات و یادگیری. (نیمکره چپ و راست دارد).</li>
+                    <li><span class="highlight" title="در پشت سر قرار دارد">مخچه:</span> مرکز حفظ <b>تعادل</b> بدن. (مثل بندبازی!).</li>
+                    <li><span class="highlight" title="گره حیات">ساقه مغز:</span> کنترل اعمال حیاتی مثل تنفس و ضربان قلب. (اتصال مغز به نخاع).</li>
+                </ul>
+            </div>
+
+            <div class="lesson-card">
+                <h3>⚡ یاخته‌های عصبی (نورون)</h3>
+                <p>سلول‌های اصلی سیستم عصبی <b>نورون</b> نام دارند که جریان الکتریکی ضعیفی تولید می‌کنند.</p>
+                <ul>
+                    <li><b>دندریت:</b> گیرنده پیام (ورودی).</li>
+                    <li><b>جسم سلولی:</b> بخش مرکزی و پردازشگر.</li>
+                    <li><b>آکسون:</b> فرستنده پیام (خروجی).</li>
+                    <li><b>سیناپس:</b> محل ارتباط بین دو نورون (پیام شیمیایی می‌شود).</li>
+                </ul>
+            </div>
+
+            <div class="lesson-card">
+                <h3>🚦 انواع فعالیت‌ها</h3>
+                <ul>
+                    <li><b>ارادی:</b> با تصمیم و آگاهی ما انجام می‌شود (مثل برداشتن مداد). مرکز: قشر مخ.</li>
+                    <li><b>غیرارادی (انعکاس):</b> بسیار سریع، بدون تفکر و برای حفاظت از بدن (مثل عقب کشیدن دست از جسم داغ). مرکز اغلب: نخاع.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- بخش ۲: فلش‌کارت‌ها -->
+        <section id="flashcards" class="content-section">
+            <div style="text-align:center; margin-bottom:20px; color:var(--text-light);">
+                <small>روی کارت‌ها کلیک کنید تا پاسخ را ببینید 👇</small>
+            </div>
+            <div class="flashcards-grid" id="flashcardsContainer">
+                <!-- کارت‌ها با جاوااسکریپت ساخته می‌شوند -->
+            </div>
+        </section>
+
+        <!-- بخش ۳: آزمون -->
+        <section id="quiz" class="content-section">
+            <div class="quiz-container">
+                <div id="quiz-start">
+                    <h2>آماده‌اید خودتان را بسنجید؟</h2>
+                    <p style="margin: 15px 0;">۶ سوال جذاب منتظر شماست.</p>
+                    <button class="next-btn" style="display:inline-block;" onclick="startQuiz()">شروع آزمون</button>
+                </div>
+                
+                <div id="quiz-game" style="display:none;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.9rem; color:var(--text-light);">
+                        <span id="q-progress">سوال ۱ از ۶</span>
+                        <span id="score-display">امتیاز: ۰</span>
+                    </div>
+                    <div class="question-text" id="q-text">سوال اینجا قرار می‌گیرد...</div>
+                    <div class="options-grid" id="options-container">
+                        <!-- گزینه‌ها اینجا می‌آیند -->
+                    </div>
+                    <div class="feedback-msg" id="feedback"></div>
+                    <button class="next-btn" id="next-q-btn" onclick="nextQuestion()">سوال بعدی</button>
+                </div>
+
+                <div id="quiz-result" style="display:none;">
+                    <div style="font-size: 4rem;">🏆</div>
+                    <h2>پایان آزمون!</h2>
+                    <p class="score-board" id="final-score">امتیاز شما: ؟</p>
+                    <p id="result-msg">پیام نتیجه...</p>
+                    <button class="next-btn" style="display:inline-block; margin-top:20px;" onclick="resetQuiz()">آزمون مجدد</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش ۴: آزمایشگاه خلاقیت -->
+        <section id="extras" class="content-section">
+            
+            <!-- تعامل با نورون -->
+            <div class="lesson-card" style="border-right-color: var(--accent-color);">
+                <h3>🔬 ساختار نورون را بشناسید</h3>
+                <p>روی نام بخش‌های نورون کلیک کنید تا وظیفه‌اش را ببینید:</p>
+                
+                <div class="neuron-interactive">
+                    <div style="font-size:4rem; margin-bottom:10px;">⚡🦠⚡</div>
+                    <div class="neuron-info" id="neuron-display">
+                        بخشی را انتخاب کنید...
+                    </div>
+                    <div class="neuron-parts">
+                        <button class="part-btn" onclick="showNeuronPart('dendrite')">دندریت</button>
+                        <button class="part-btn" onclick="showNeuronPart('body')">جسم سلولی</button>
+                        <button class="part-btn" onclick="showNeuronPart('axon')">آکسون</button>
+                        <button class="part-btn" onclick="showNeuronPart('myelin')">غلاف میلین</button>
+                        <button class="part-btn" onclick="showNeuronPart('synapse')">سیناپس</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- آیا می‌دانستید -->
+            <div class="did-you-know">
+                <span class="bulb-icon">💡</span>
+                <h3>آیا می‌دانستید؟</h3>
+                <p id="fact-text">سرعت پیام عصبی در برخی نورون‌ها به ۴۰۰ کیلومتر در ساعت می‌رسد!</p>
+                <button onclick="nextFact()" style="background:rgba(255,255,255,0.3); border:none; padding:5px 15px; border-radius:15px; color:white; margin-top:15px; cursor:pointer;">نکته بعدی</button>
+            </div>
+
+            <!-- چالش زمانی -->
+            <div class="lesson-card" style="margin-top:20px;">
+                <h3>⏱️ چالش واکنش سریع!</h3>
+                <p>وقتی دایره سبز شد، سریع رویش کلیک کن. زمان واکنشت چقدره؟</p>
+                
+                <!-- بخش تصویر اضافه شده با استایل مناسب -->
+                <div style="text-align: center; margin: 15px 0;">
+                    <!-- تصویر آپلود شده جایگزین شد -->
+                    <img src="Gemini_Generated_Image_wxj6lywxj6lywxj6" 
+                         onerror="this.style.display='none'; document.getElementById('img-placeholder').style.display='block';"
+                         alt="چالش واکنش" 
+                         style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.15); border: 3px solid white;">
+                    
+                    <!-- متن راهنما یا جایگزین در صورتی که عکس لود نشود -->
+                    <div id="img-placeholder" style="display:none; padding: 20px; background: #e0e7ff; border-radius: 12px; color: #4f46e5;">
+                        <span style="font-size: 2rem;">⚡</span><br>
+                        تصویر بارگذاری نشد<br>
+                        <span style="font-size: 0.8rem">لطفاً فایل عکس را کنار فایل HTML قرار دهید.</span>
+                    </div>
+                </div>
+
+                <div id="reaction-area" style="height:100px; background:#ddd; border-radius:10px; margin-top:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:bold; color:#555;" onclick="handleReactionClick()">
+                    برای شروع کلیک کن
+                </div>
+                <p id="reaction-result" style="text-align:center; margin-top:5px; font-weight:bold; color:var(--primary-color);"></p>
+            </div>
+
+        </section>
+
+    </div>
+
+    <script>
+        // --- داده‌های فلش‌کارت ---
+        const flashcardsData = [
+            { q: "دستگاه عصبی مرکزی (CNS)", a: "شامل مغز و نخاع است و مرکز کنترل فعالیت‌های بدن می‌باشد." },
+            { q: "وظیفه مخ چیست؟", a: "یادگیری، تفکر، حافظه، احساسات و کنترل حرکات ارادی." },
+            { q: "وظیفه مخچه چیست؟", a: "حفظ تعادل بدن با هماهنگ کردن ماهیچه‌ها." },
+            { q: "گره حیات کجاست؟", a: "ساقه مغز؛ چون ضربان قلب و تنفس را کنترل می‌کند." },
+            { q: "وظیفه نخاع چیست؟", a: "رابط بین مغز و اعصاب محیطی و مرکز بسیاری از انعکاس‌ها." },
+            { q: "نورون چیست؟", a: "یاخته اصلی عصبی که جریان الکتریکی تولید و هدایت می‌کند." },
+            { q: "جهت پیام در نورون؟", a: "دندریت ⬅️ جسم سلولی ⬅️ آکسون" },
+            { q: "سیناپس چیست؟", a: "محل ارتباط دو نورون که پیام در آنجا شیمیایی می‌شود." },
+            { q: "عصب حسی چیست؟", a: "پیام را از اندام‌ها به مغز یا نخاع می‌برد." },
+            { q: "عصب حرکتی چیست؟", a: "فرمان را از مغز یا نخاع به ماهیچه‌ها می‌برد." },
+            { q: "انعکاس چیست؟", a: "پاسخ سریع و غیرارادی برای محافظت از بدن (مثل پلک زدن)." },
+            { q: "حفاظت از مغز؟", a: "جمجمه، پرده مننژ و مایع مغزی-نخاعی." }
+        ];
+
+        // --- داده‌های آزمون ---
+        const quizData = [
+            { q: "مرکز حفظ تعادل بدن کدام بخش است؟", options: ["مخ", "مخچه", "ساقه مغز", "نخاع"], correct: 1 },
+            { q: "پیام عصبی در طول نورون به چه صورت است؟", options: ["شیمیایی", "هورمونی", "الکتریکی", "مکانیکی"], correct: 2 },
+            { q: "کدام بخش مرکز کنترل فعالیت‌های حیاتی مثل تنفس است؟", options: ["ساقه مغز", "مخچه", "نخاع", "نیمکره راست"], correct: 0 },
+            { q: "مسیر درست حرکت پیام عصبی کدام است؟", options: ["آکسون ← جسم سلولی ← دندریت", "دندریت ← جسم سلولی ← آکسون", "جسم سلولی ← دندریت ← آکسون", "آکسون ← دندریت ← جسم سلولی"], correct: 1 },
+            { q: "انعکاس، یک فعالیت ..... است و اغلب توسط ..... کنترل می‌شود.", options: ["ارادی - مخ", "غیرارادی - مخچه", "ارادی - نخاع", "غیرارادی - نخاع"], correct: 3 },
+            { q: "در محل سیناپس، پیام عصبی چگونه منتقل می‌شود؟", options: ["الکتریکی", "مکانیکی", "شیمیایی", "مغناطیسی"], correct: 2 }
+        ];
+
+        // --- داده‌های آیا می‌دانستید ---
+        const facts = [
+            "مغز انسان حدود ۱۰۰ میلیارد نورون دارد!",
+            "مغز درد را احساس نمی‌کند، چون گیرنده درد ندارد.",
+            "وزن مغز حدود ۲ درصد وزن بدن است اما ۲۰ درصد انرژی را مصرف می‌کند.",
+            "اطلاعات در اعصاب با سرعتی بین ۱ تا ۱۰۰ متر بر ثانیه حرکت می‌کنند.",
+            "مخچه با اینکه کوچک است، نیمی از نورون‌های مغز را در خود دارد."
+        ];
+
+        // --- متغیرهای عمومی ---
+        let currentScore = 0;
+        let currentQuestionIndex = 0;
+        let reactionStartTime = 0;
+        let reactionState = 'waiting'; // waiting, ready, done
+
+        // --- توابع عمومی ---
+
+        // تعویض تب‌ها
+        function switchTab(tabId) {
+            // مخفی کردن همه سکشن‌ها
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            // نمایش سکشن انتخاب شده
+            document.getElementById(tabId).classList.add('active');
+            
+            // فعال کردن دکمه مربوطه
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.onclick.toString().includes(tabId));
+            if(activeBtn) activeBtn.classList.add('active');
+
+            // ریست کردن اسکرول
+            window.scrollTo(0, 0);
+        }
+
+        // تولید فلش‌کارت‌ها
+        function renderFlashcards() {
+            const container = document.getElementById('flashcardsContainer');
+            container.innerHTML = '';
+            flashcardsData.forEach((item, index) => {
+                const cardHTML = `
+                    <div class="flashcard-container" onclick="this.querySelector('.flashcard').classList.toggle('flipped')">
+                        <div class="flashcard">
+                            <div class="card-face card-front">
+                                <h3>${index + 1}</h3>
+                                <p style="font-weight:bold; font-size:1.1rem; margin-top:10px;">${item.q}</p>
+                                <span class="card-hint">کلیک برای پاسخ</span>
+                            </div>
+                            <div class="card-face card-back">
+                                <p>${item.a}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+
+        // --- لاجیک آزمون ---
+        function startQuiz() {
+            currentScore = 0;
+            currentQuestionIndex = 0;
+            document.getElementById('quiz-start').style.display = 'none';
+            document.getElementById('quiz-result').style.display = 'none';
+            document.getElementById('quiz-game').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const qData = quizData[currentQuestionIndex];
+            document.getElementById('q-text').innerText = qData.q;
+            document.getElementById('q-progress').innerText = `سوال ${currentQuestionIndex + 1} از ${quizData.length}`;
+            document.getElementById('score-display').innerText = `امتیاز: ${currentScore}`;
+            
+            const optsContainer = document.getElementById('options-container');
+            optsContainer.innerHTML = '';
+            
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('next-q-btn').style.display = 'none';
+
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(idx, btn);
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIdx, btnElement) {
+            // غیرفعال کردن همه دکمه‌ها
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(b => b.disabled = true);
+
+            const correctIdx = quizData[currentQuestionIndex].correct;
+            const feedback = document.getElementById('feedback');
+
+            if (selectedIdx === correctIdx) {
+                btnElement.classList.add('correct');
+                currentScore += 10;
+                feedback.innerHTML = "✅ آفرین! پاسخ درست است.";
+                feedback.style.color = "green";
+                feedback.style.background = "#d1fae5";
+            } else {
+                btnElement.classList.add('wrong');
+                buttons[correctIdx].classList.add('correct'); // نمایش جواب درست
+                feedback.innerHTML = "❌ اشتباه بود. گزینه سبز پاسخ صحیح است.";
+                feedback.style.color = "#991b1b";
+                feedback.style.background = "#fee2e2";
+            }
+
+            feedback.style.display = 'block';
+            document.getElementById('next-q-btn').style.display = 'inline-block';
+            document.getElementById('score-display').innerText = `امتیاز: ${currentScore}`;
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                showQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function endQuiz() {
+            document.getElementById('quiz-game').style.display = 'none';
+            document.getElementById('quiz-result').style.display = 'block';
+            document.getElementById('final-score').innerText = `امتیاز نهایی: ${currentScore} از ${quizData.length * 10}`;
+            
+            const msg = document.getElementById('result-msg');
+            if(currentScore === quizData.length * 10) msg.innerText = "عالی! تو یک نابغه زیست‌شناسی هستی! 🌟";
+            else if(currentScore >= (quizData.length * 10)/2) msg.innerText = "خوب بود! اما نیاز به مرور بیشتر داری. 👍";
+            else msg.innerText = "نیاز به تلاش بیشتر. دوباره درسنامه را بخوان. 📚";
+        }
+
+        function resetQuiz() {
+            startQuiz();
+        }
+
+        // --- تعاملی نورون ---
+        function showNeuronPart(part) {
+            const display = document.getElementById('neuron-display');
+            const parts = {
+                'dendrite': '<b>دندریت:</b> رشته‌های منشعب که پیام را دریافت و به جسم سلولی می‌آورند.',
+                'body': '<b>جسم سلولی:</b> بخش اصلی سلول که هسته در آن قرار دارد و سوخت‌وساز را انجام می‌دهد.',
+                'axon': '<b>آکسون:</b> رشته‌ای بلند که پیام را از جسم سلولی خارج می‌کند.',
+                'myelin': '<b>غلاف میلین:</b> پوششی روی آکسون که باعث افزایش سرعت پیام می‌شود.',
+                'synapse': '<b>سیناپس:</b> فضای بین انتهای آکسون یک نورون و سلول بعدی.'
+            };
+            display.innerHTML = parts[part];
+            
+            // مدیریت کلاس اکتیو دکمه‌ها
+            document.querySelectorAll('.part-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // --- آیا می‌دانستید ---
+        function nextFact() {
+            const factEl = document.getElementById('fact-text');
+            const randomFact = facts[Math.floor(Math.random() * facts.length)];
+            factEl.style.opacity = 0;
+            setTimeout(() => {
+                factEl.innerText = randomFact;
+                factEl.style.opacity = 1;
+            }, 300);
+        }
+
+        // --- تست سرعت واکنش ---
+        function handleReactionClick() {
+            const box = document.getElementById('reaction-area');
+            const res = document.getElementById('reaction-result');
+
+            if (reactionState === 'waiting') {
+                reactionState = 'ready';
+                box.style.background = '#ef4444'; // قرمز
+                box.innerText = "صبر کن... سبز که شد کلیک کن!";
+                res.innerText = "";
+                
+                // زمان تصادفی بین 2 تا 5 ثانیه
+                const delay = Math.random() * 3000 + 2000;
+                
+                setTimeout(() => {
+                    if (reactionState === 'ready') {
+                        reactionState = 'go';
+                        box.style.background = '#10b981'; // سبز
+                        box.innerText = "الان کلیک کن!";
+                        reactionStartTime = Date.now();
+                    }
+                }, delay);
+
+            } else if (reactionState === 'ready') {
+                // کلیک زود هنگام
+                box.style.background = '#ddd';
+                box.innerText = "خیلی زود زدی! دوباره کلیک کن.";
+                reactionState = 'waiting';
+            } else if (reactionState === 'go') {
+                const reactionTime = Date.now() - reactionStartTime;
+                box.style.background = '#ddd';
+                box.innerText = "برای امتحان دوباره کلیک کن";
+                res.innerText = `زمان واکنش شما: ${reactionTime} میلی‌ثانیه`;
+                
+                if(reactionTime < 250) res.innerText += " (سرعتت مثل رفلکس نخاع عالیه! ⚡)";
+                else res.innerText += " (خوبه، ولی می‌تونی سریع‌تر باشی)";
+                
+                reactionState = 'waiting';
+            }
+        }
+
+        // --- نوار پیشرفت اسکرول ---
+        window.onscroll = function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        };
+
+        // --- شروع برنامه ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderFlashcards();
+        });
+
+    </script>
+</body>
+</html>
